@@ -1,38 +1,124 @@
-.App {
-  text-align: center;
+.app {
+  width: 65%;
+  margin: auto;
+  background-color: rgb(42, 42, 42);
 }
 
-.App-logo {
-  height: 40vmin;
+.headLine{
+  margin-left: 2.5%;
+  margin-top: 3.5vh;
+  color: rgb(111, 255, 0);
+}
+
+.loreText{
+  margin-left: 6.5%;
+  color: rgb(255, 255, 255);
+}
+
+h1{
+  margin-left: 5%;
+  color: rgb(0, 255, 149);
+}
+
+h2{
+  margin-left: 7.5%;
+}
+
+.noTopMargin {
+  margin-top: 0%;
+}
+
+.navLink:link {
+  color: rgb(255, 255, 255);
+}
+
+/* visited link */
+.navLink:visited {
+  color: rgb(138, 255, 138);
+}
+
+/* mouse over link */
+.navLink:hover {
+  color: rgb(220, 82, 255);
+}
+
+/* selected link */
+.navLink:active {
+  color: blue;
+}
+
+button {
+  height: 140px;
+  width: 100px;
+}
+
+/*.island {
+  width: 100%;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.building {
+  position: absolute;
+  background-color: transparent;
+  border: 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.building:hover > img {
+  animation-duration: 0.5s;
+  animation-name: changeScale;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  transform-origin: center;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
+@keyframes changeScale {
   from {
-    transform: rotate(0deg);
+    transform: scale(1.0);
   }
+
   to {
-    transform: rotate(360deg);
+    transform: scale(1.2);
   }
 }
+
+.text {
+  top: 5%;
+  left: 24%;
+}
+
+.building_apartment {
+  top: 28%;
+  left: 59%;
+}
+
+.building_restaurant {
+  top: 34%;
+  left: 25%;
+}
+
+.building_graveyard {
+  top: 57%;
+  left: 60%;
+}
+
+.building_arcade {
+  top: 33%;
+  left: 43%;
+}
+
+.backToMenu {
+  top: 0%;
+  left: 0%;
+}*/
+
+/*************ghost*dialog*************/
+
+/*.dialBox {
+  position: absolute;
+  height: 40%;
+  width: 70%;
+  top: 45%;
+  left: 15%;
+  
+  background-color: rgba(0, 255, 255, 0.255);
+}*/
