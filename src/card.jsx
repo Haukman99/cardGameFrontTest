@@ -174,7 +174,7 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
         
     }
 
-    const sendCommand = (place) => {
+    const sendCommand = (place, soul) => {
         if(canPlay){
             console.log(effectInEffect);
             if(effectInEffect == null){
@@ -189,16 +189,17 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
                 }
             }
             else{
-                selectCommand(place, true);
+                selectCommand(place, true, soul);
                 console.log("lagtrain");
             }
         }
         setPlacecardSelected(-1);
     }
 
-    const selectCommand = (place, isYou) => {
+    const selectCommand = (place, isYou, isSoul) => {
         let cards;
         console.log(isYou)
+        console.log(isSoul, "a soul");
 
         if(isYou){
             cards = cardsOnField;
@@ -214,7 +215,15 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
                     yesElements.splice(0,2);
                     console.log(yesElements, place);
                     for (let index = 0; index < yesElements.length; index++) {
-                        if(yesElements[index] === DeckLockUp[cards[place]].cardType){
+                        let typeOfCard;
+                        if(isSoul){
+                            typeOfCard = SoulDeckLockUp[cards[place]].cardType;
+                        }
+                        else{
+                            typeOfCard = DeckLockUp[cards[place]].cardType;
+                        }
+                        if(yesElements[index] === typeOfCard){
+                            console.log("IOIOIOIO");
                             let newEnemyGrid = cards;
                             switch (effectInEffect[1]) {
                                 case "sw":
@@ -598,7 +607,7 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
                     <button style={{backgroundColor: cardsOnField[2] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[2]].cardType] : "" }} onClick={() => sendCommand(2)}>{cardsOnField[2] !== -1 ? DeckLockUp[cardsOnField[2]].name : ''}</button>
                     <br/>
                     <button style={{backgroundColor: cardsOnField[3] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[3]].cardType] : "" }} onClick={() => sendCommand(3)}>{cardsOnField[3] !== -1 ? DeckLockUp[cardsOnField[3]].name : ''}</button>
-                    <button style={{backgroundColor: cardsOnField[4] !== -1 ? ColorLockUp[SoulDeckLockUp[cardsOnField[4]].cardType] : "" }} onClick={() => sendCommand(4, "soul")}>{cardsOnField[4] !== -1 ? SoulDeckLockUp[cardsOnField[4]].name : ''}</button>
+                    <button style={{backgroundColor: cardsOnField[4] !== -1 ? ColorLockUp[SoulDeckLockUp[cardsOnField[4]].cardType] : "" }} onClick={() => sendCommand(4, true)}>{cardsOnField[4] !== -1 ? SoulDeckLockUp[cardsOnField[4]].name : ''}</button>
                     <button style={{backgroundColor: cardsOnField[5] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[5]].cardType] : "" }} onClick={() => sendCommand(5)}>{cardsOnField[5] !== -1 ? DeckLockUp[cardsOnField[5]].name : ''}</button>
                 </div>
                 <div style={{width: "100px"}}></div>
