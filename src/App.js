@@ -9,51 +9,8 @@ import TaleThree from './tales/tale3.jsx';
 import TaleFour from './tales/tale4.jsx';
 import TaleFive from './tales/tale5.jsx';
 import Card from './card';
-import { io } from "socket.io-client";
-
-const socket = io('localhost:3001', { autoConnect: false });
 
 function App() {
-  const [isConnected, setIsConnected] = useState(socket.connected);
-  const [lastMessage, setLastMessage] = useState(null);
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      setIsConnected(true);
-    });
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
-    socket.on('message', data => {
-      console.log(data);
-    });
-    return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('message');
-    };
-  }, []);
-
-  const sendMessage = () => {
-    socket.emit('hello!', {
-      "tets": 10
-    });
-  }
-
-  const connectToSocket = () => {
-    socket.connect();
-  }
-
-  var DeckLockUp =[
-    {
-
-    }
-  ]
-
-  const [organPlaced, setOrganPlaced] = useState(false);
-  const [deckCards, setDeckCards] = useState([]);
-  const [handCards, setHandCards] = useState([]);
-
   //const [areaHidden, setAreaHidden] = useState([true,false,false,false,false, false, false, false, false]);
   //const [menuHidden, setMenuHidden] = useState(true);
 
@@ -141,7 +98,7 @@ function App() {
 
       <Routes>
         <Route exact path='/' element={<TaleOverview/>} />
-        <Route exact path='/card' element={<Card handCards={handCards} butt={sendMessage} connec={connectToSocket}/>} />
+        <Route exact path='/card' element={<Card/>} />
         <Route exact path='/tale1' element={<TaleOne/>} />
         <Route exact path='/tale2' element={<TaleTwo/>} />
         <Route exact path='/tale3' element={<TaleThree/>} />
