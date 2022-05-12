@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { io } from "socket.io-client";
 
-const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001"*/, { autoConnect: false });
+const socket = io(/*'https://cardtestnode.herokuapp.com/' ||*/ "http://localhost:3001", { autoConnect: false });
 
   export default function Card() {
     const [input, setInput] = useState('');
@@ -178,7 +178,7 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
         if(canPlay){
             console.log(effectInEffect);
             if(effectInEffect == null){
-                if(placecardSelected !== -1 && (!organPlaced || DeckLockUp[placecardSelected].cardType === "EFFECT" && cardsOnField[place] === -1)){
+                if(placecardSelected !== -1 && (!organPlaced || (DeckLockUp[placecardSelected].cardType === "EFFECT" && cardsOnField[place] === -1))){
                     setCardPos(place);
                     loadUpCard(placecardSelected, place);
                     socket.emit('action!', {
@@ -191,6 +191,11 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             else{
                 selectCommand(place, true, soul);
                 console.log("lagtrain");
+                socket.emit('action!', {
+                    "cmd": cardsOnField,
+                    "room": room,
+                    "player": player
+                });
             }
         }
         setPlacecardSelected(-1);
@@ -250,9 +255,16 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
                                     "room": room,
                                     "player": player
                                 });
-                                setEffectInEffect(null);         
+                                setEffectInEffect(null);
                             }
                             break;
+                        }
+                        else if(place === indexOfEffectCard){
+                            let hand = handCards;
+                            hand.push(cardsOnField[indexOfEffectCard])
+                            setHandCards(hand);
+                            cardsOnField[indexOfEffectCard] = -1;
+                            setEffectInEffect(null);
                         }
                     }
                 }
@@ -314,7 +326,7 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
     }
 
     const endRound = () => {
-        if(canPlay){
+        if(canPlay && effectInEffect == null){
             socket.emit('end!', {
                 "room": room,
                 "player": player
@@ -334,10 +346,10 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
     }
 
     const makeDeck = () => {
-        let deck = [DeckLockUp.length-3,DeckLockUp.length-3,DeckLockUp.length-2,DeckLockUp.length-2,7,4,1];
-        /*for (let index = 0; index < 21; index++) {
+        let deck = [];
+        for (let index = 0; index < 21; index++) {
             deck.push(Math.floor(Math.random() * DeckLockUp.length));
-        }*/
+        }
         return deck;
     }
 
@@ -357,7 +369,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 2,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/brain.png"
         },
         {
             "cardType": "RED",
@@ -366,7 +379,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 1,
             "INT": 1,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/spine.png"
         },
         {
             "cardType": "RED",
@@ -375,7 +389,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 2,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/heart.png"
         },
         {
             "cardType": "BLUE",
@@ -384,7 +399,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 3,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/bone.png"
         },
         {
             "cardType": "BLUE",
@@ -393,7 +409,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/nerves.png"
         },
         {
             "cardType": "BLUE",
@@ -402,7 +419,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 4,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/liver.png"
         },
         {
             "cardType": "BLUE",
@@ -411,7 +429,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 3,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/kidney.png"
         },
         {
             "cardType": "BLUE",
@@ -420,7 +439,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/stomach.png"
         },
         {
             "cardType": "GREEN",
@@ -429,7 +449,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 1,
             "INT": 0,
             "SEN": 1,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/tongue.png"
         },
         {
             "cardType": "GREEN",
@@ -438,7 +459,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 2,
             "SEN": 1,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/skin.png"
         },
         {
             "cardType": "GREEN",
@@ -447,7 +469,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 0,
             "SEN": 3,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/eye.png"
         },
         {
             "cardType": "GREEN",
@@ -456,7 +479,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 2,
             "INT": 0,
             "SEN": 2,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/ear.png"
         },
         {
             "cardType": "ITEM",
@@ -465,7 +489,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/sword.png"
         },
         {
             "cardType": "ITEM",
@@ -474,16 +499,18 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 2,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/shield.png"
         },
         {
             "cardType": "ITEM",
             "name": "REVOLVER/2",
             "ATK": 4,
-            "DEF": 0,
+            "DEF": -4,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": ["s,al,3"]
+            "EFFECT": [/*"s,al,3"*/],
+            "pic": "/cardImg/revolver.png"
         },
         /*{
             "cardType": "ITEM",
@@ -501,7 +528,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 2,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/funihat.png"
         },
         {
             "cardType": "ITEM",
@@ -510,9 +538,10 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 0,
             "SEN": 1,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/cowboyhat.png"
         },
-        {
+        /*{
             "cardType": "EFFECT",
             "name": "SOULSWAP",
             "ATK": 0,
@@ -520,7 +549,7 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "INT": 0,
             "SEN": 0,
             "EFFECT": ["s,sw,SOUL"]
-        },
+        },*/
         {
             "cardType": "EFFECT",
             "name": "ORGAN FAILURE",
@@ -528,7 +557,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": ["m,do,RED,GREEN,BLUE"]
+            "EFFECT": ["m,do,RED,GREEN,BLUE"],
+            "pic": "/cardImg/failure.png"
         },
         /*{
             "cardType": "EFFECT",
@@ -555,7 +585,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": ["m,sw,RED,BLUE,GREEN"]
+            "EFFECT": ["m,sw,RED,BLUE,GREEN"],
+            "pic": "/cardImg/radioactive.png"
         },
         {
             "cardType": "EFFECT",
@@ -564,7 +595,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 0,
             "SEN": 0,
-            "EFFECT": ["s,h,3"]
+            "EFFECT": ["s,h,3"],
+            "pic": "/cardImg/heal.png"
         },
         
     ]
@@ -577,7 +609,8 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             "DEF": 0,
             "INT": 3,
             "SEN": 0,
-            "EFFECT": []
+            "EFFECT": [],
+            "pic": "/cardImg/soul.png"
         },
     ]
 
@@ -592,7 +625,7 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             <br/>
             <br/>
             <h2 style={{color: "white"}}>{canPlay === true ? "Your Turn" : "Opponents Turn"}</h2>
-            <p style={{color: "white"}}>{"INT:" + monsterStats[0]+"/"+monsterStats[1] + " ATK:" + monsterStats[2] + " SEN:" + monsterStats[3] + " DEF:" +  monsterStats[4]}</p>
+            <p style={{color: "white"}}>{"INT:" + monsterStats[0]+"/"+monsterStats[1] + " ATK:" + monsterStats[2] +/* " SEN:" + monsterStats[3] + */ " DEF:" + monsterStats[4]}</p>
             <br/>
             <br/>
             <button onClick={endRound}>EndRound</button>
@@ -602,23 +635,23 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             <br/>
             <div style={{display:"flex"}}>
                 <div>
-                    <button style={{backgroundColor: cardsOnField[0] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[0]].cardType] : "" }} onClick={() => sendCommand(0)}>{cardsOnField[0] !== -1 ? DeckLockUp[cardsOnField[0]].name : ''}</button>
-                    <button style={{backgroundColor: cardsOnField[1] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[1]].cardType] : "" }} onClick={() => sendCommand(1)}>{cardsOnField[1] !== -1 ? DeckLockUp[cardsOnField[1]].name : ''}</button>
-                    <button style={{backgroundColor: cardsOnField[2] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[2]].cardType] : "" }} onClick={() => sendCommand(2)}>{cardsOnField[2] !== -1 ? DeckLockUp[cardsOnField[2]].name : ''}</button>
+                    <button style={{backgroundColor: cardsOnField[0] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[0]].cardType] : "" }} onClick={() => sendCommand(0)}><img className='imgCard' alt='' src={cardsOnField[0] !== -1 ? DeckLockUp[cardsOnField[0]].pic : "/cardImg/normal.png"}/>{cardsOnField[0] !== -1 ? DeckLockUp[cardsOnField[0]].name : ''}</button>
+                    <button style={{backgroundColor: cardsOnField[1] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[1]].cardType] : "" }} onClick={() => sendCommand(1)}><img className='imgCard' alt='' src={cardsOnField[1] !== -1 ? DeckLockUp[cardsOnField[1]].pic : "/cardImg/normal.png"}/>{cardsOnField[1] !== -1 ? DeckLockUp[cardsOnField[1]].name : ''}</button>
+                    <button style={{backgroundColor: cardsOnField[2] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[2]].cardType] : "" }} onClick={() => sendCommand(2)}><img className='imgCard' alt='' src={cardsOnField[2] !== -1 ? DeckLockUp[cardsOnField[2]].pic : "/cardImg/normal.png"}/>{cardsOnField[2] !== -1 ? DeckLockUp[cardsOnField[2]].name : ''}</button>
                     <br/>
-                    <button style={{backgroundColor: cardsOnField[3] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[3]].cardType] : "" }} onClick={() => sendCommand(3)}>{cardsOnField[3] !== -1 ? DeckLockUp[cardsOnField[3]].name : ''}</button>
-                    <button style={{backgroundColor: cardsOnField[4] !== -1 ? ColorLockUp[SoulDeckLockUp[cardsOnField[4]].cardType] : "" }} onClick={() => sendCommand(4, true)}>{cardsOnField[4] !== -1 ? SoulDeckLockUp[cardsOnField[4]].name : ''}</button>
-                    <button style={{backgroundColor: cardsOnField[5] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[5]].cardType] : "" }} onClick={() => sendCommand(5)}>{cardsOnField[5] !== -1 ? DeckLockUp[cardsOnField[5]].name : ''}</button>
+                    <button style={{backgroundColor: cardsOnField[3] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[3]].cardType] : "" }} onClick={() => sendCommand(3)}><img className='imgCard' alt='' src={cardsOnField[3] !== -1 ? DeckLockUp[cardsOnField[3]].pic : "/cardImg/normal.png"}/>{cardsOnField[3] !== -1 ? DeckLockUp[cardsOnField[3]].name : ''}</button>
+                    <button style={{backgroundColor: cardsOnField[4] !== -1 ? ColorLockUp[SoulDeckLockUp[cardsOnField[4]].cardType] : "" }} onClick={() => sendCommand(4, true)}><img className='imgCard' alt=''src={cardsOnField[4] !== -1 ? SoulDeckLockUp[cardsOnField[4]].pic : "/cardImg/normal.png"}/>{cardsOnField[4] !== -1 ? SoulDeckLockUp[cardsOnField[4]].name : ''}</button>
+                    <button style={{backgroundColor: cardsOnField[5] !== -1 ? ColorLockUp[DeckLockUp[cardsOnField[5]].cardType] : "" }} onClick={() => sendCommand(5)}><img className='imgCard' alt='' src={cardsOnField[5] !== -1 ? DeckLockUp[cardsOnField[5]].pic : "/cardImg/normal.png"}/>{cardsOnField[5] !== -1 ? DeckLockUp[cardsOnField[5]].name : ''}</button>
                 </div>
                 <div style={{width: "100px"}}></div>
                 <div>
-                    <button style={{backgroundColor: enemyCardsOnField[0] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[0]].cardType] : "" }} onClick={() => selectCommand(0, false)}>{enemyCardsOnField[0] !== -1 ? DeckLockUp[enemyCardsOnField[0]].name : ''}</button>
-                    <button style={{backgroundColor: enemyCardsOnField[1] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[1]].cardType] : "" }} onClick={() => selectCommand(1, false)}>{enemyCardsOnField[1] !== -1 ? DeckLockUp[enemyCardsOnField[1]].name : ''}</button>
-                    <button style={{backgroundColor: enemyCardsOnField[2] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[2]].cardType] : "" }} onClick={() => selectCommand(2, false)}>{enemyCardsOnField[2] !== -1 ? DeckLockUp[enemyCardsOnField[2]].name : ''}</button>
+                    <button style={{backgroundColor: enemyCardsOnField[0] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[0]].cardType] : "" }} onClick={() => selectCommand(0, false)}><img className='imgCard' alt=''src={enemyCardsOnField[0] !== -1 ? DeckLockUp[enemyCardsOnField[0]].pic : "/cardImg/normal.png"}/>{enemyCardsOnField[0] !== -1 ? DeckLockUp[enemyCardsOnField[0]].name : ''}</button>
+                    <button style={{backgroundColor: enemyCardsOnField[1] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[1]].cardType] : "" }} onClick={() => selectCommand(1, false)}><img className='imgCard' alt=''src={enemyCardsOnField[1] !== -1 ? DeckLockUp[enemyCardsOnField[1]].pic : "/cardImg/normal.png"}/>{enemyCardsOnField[1] !== -1 ? DeckLockUp[enemyCardsOnField[1]].name : ''}</button>
+                    <button style={{backgroundColor: enemyCardsOnField[2] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[2]].cardType] : "" }} onClick={() => selectCommand(2, false)}><img className='imgCard' alt=''src={enemyCardsOnField[2] !== -1 ? DeckLockUp[enemyCardsOnField[2]].pic : "/cardImg/normal.png"}/>{enemyCardsOnField[2] !== -1 ? DeckLockUp[enemyCardsOnField[2]].name : ''}</button>
                     <br/>
-                    <button style={{backgroundColor: enemyCardsOnField[3] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[3]].cardType] : "" }} onClick={() => selectCommand(3, false)}>{enemyCardsOnField[3] !== -1 ? DeckLockUp[enemyCardsOnField[3]].name : ''}</button>
-                    <button style={{backgroundColor: enemyCardsOnField[4] !== -1 ? ColorLockUp[SoulDeckLockUp[enemyCardsOnField[4]].cardType] : "" }} onClick={() => selectCommand(4, false)}>{enemyCardsOnField[4] !== -1 ? SoulDeckLockUp[enemyCardsOnField[4]].name : ''}</button>
-                    <button style={{backgroundColor: enemyCardsOnField[5] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[5]].cardType] : "" }} onClick={() => selectCommand(5, false)}>{enemyCardsOnField[5] !== -1 ? DeckLockUp[enemyCardsOnField[5]].name : ''}</button>
+                    <button style={{backgroundColor: enemyCardsOnField[3] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[3]].cardType] : "" }} onClick={() => selectCommand(3, false)}><img className='imgCard' alt=''src={enemyCardsOnField[3] !== -1 ? DeckLockUp[enemyCardsOnField[3]].pic : "/cardImg/normal.png"}/>{enemyCardsOnField[3] !== -1 ? DeckLockUp[enemyCardsOnField[3]].name : ''}</button>
+                    <button style={{backgroundColor: enemyCardsOnField[4] !== -1 ? ColorLockUp[SoulDeckLockUp[enemyCardsOnField[4]].cardType] : "" }} onClick={() => selectCommand(4, false)}><img className='imgCard' alt=''src={enemyCardsOnField[4] !== -1 ? SoulDeckLockUp[enemyCardsOnField[4]].pic : "/cardImg/normal.png"}/>{enemyCardsOnField[4] !== -1 ? SoulDeckLockUp[enemyCardsOnField[4]].name : ''}</button>
+                    <button style={{backgroundColor: enemyCardsOnField[5] !== -1 ? ColorLockUp[DeckLockUp[enemyCardsOnField[5]].cardType] : "" }} onClick={() => selectCommand(5, false)}><img className='imgCard' alt=''src={enemyCardsOnField[5] !== -1 ? DeckLockUp[enemyCardsOnField[5]].pic : "/cardImg/normal.png"}/>{enemyCardsOnField[5] !== -1 ? DeckLockUp[enemyCardsOnField[5]].name : ''}</button>
                 </div>
             </div>
             <br/>
@@ -627,7 +660,7 @@ const socket = io('https://cardtestnode.herokuapp.com/' /*"http://localhost:3001
             <br/>
             <br/>
             {handCards.map((card, index) => 
-              <button key={index} onClick={() => setPlacecardSelected(card)}>{DeckLockUp[card].name}</button>
+              <button key={index} onClick={() => setPlacecardSelected(card)}><img className='imgCard' alt=''src={card !== -1 ? DeckLockUp[card].pic : "/cardImg/normal.png"}/>{DeckLockUp[card].name}</button>
             )}
         </div>
     )
