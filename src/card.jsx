@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { io } from "socket.io-client";
 
-const socket = io(/*'https://cardtestnode.herokuapp.com/' ||*/ "http://localhost:3001", { autoConnect: false });
+const socket = io('https://cardtestnode.herokuapp.com/'/* || "http://localhost:3001"*/, { autoConnect: false });
 
   export default function Card() {
     const [input, setInput] = useState('');
