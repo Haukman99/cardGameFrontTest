@@ -6,9 +6,18 @@ import { NavLink } from "react-router-dom";
         <div>
             <h1>Tales from Ghost Town Island + Flesh &amp; Souls</h1>
             <h2>
-                <NavLink className="navLink" to='/tale1'>Tale 1. The Jar</NavLink>
+                <NavLink className="navLink" to='/tale1'>THE STACK AND TOOLS</NavLink>
             </h2>
+            
             <h2>
+                <NavLink className="navLink" to='/card'>Flesh &amp; Souls</NavLink>
+            </h2>
+        </div>
+    )
+}
+  
+/*
+<h2>
                 <NavLink className="navLink" to='/tale2'>Tale 2.</NavLink>
             </h2>
             <h2>
@@ -20,10 +29,4 @@ import { NavLink } from "react-router-dom";
             <h2>
                 <NavLink className="navLink" to='/tale5'>Tale 5. The beginning of Ghost Town Island</NavLink>
             </h2>
-            <h2>
-                <NavLink className="navLink" to='/card'>Flesh &amp; Souls</NavLink>
-            </h2>
-        </div>
-    )
-}
-  
+*/
